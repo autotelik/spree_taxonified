@@ -1,0 +1,1 @@
+page.replace_html @update_table_dom, :partial => "table.html.erb", :locals => {:taxon => @taxon}

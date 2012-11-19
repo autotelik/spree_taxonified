@@ -1,0 +1,21 @@
+<div class="toolbar" data-hook="toolbar">
+  <ul class="actions">
+    <li id=<%= "#{dom_id(taxon, :add_product)}" -%>>
+      <%  available_products  = @all_available_products - taxon.products %>
+      <%= select_tag dom_id(taxon, :select_add_product), options_for_select(available_products.collect{ |p| [p.name, p.id] }.insert(0, ''), 0)%>
+
+      <%= image_tag "spinner.gif", :style => "display:none", :id => "#{dom_id(taxon, :add)}" -%>
+      &nbsp;
+      <%= link_to icon('add') + ' ' + t("add_product"),
+        {
+        :remote => true,
+        :url => select_admin_products_taxons_url(taxon),
+        :method => :put,
+        :with => "'dom=#{dom_id(taxon, :product_list)}' + '&product=' + jQuery('##{dom_id(taxon, :add_product)}').val()",
+        :before => "jQuery('##{dom_id(taxon, :add)}').show()",
+        :complete => "jQuery('##{dom_id(taxon, :add)}').hide()",
+      }, :class => 'iconlink' %>
+    </li>
+  </ul>
+  <br class="clear" />
+</div>

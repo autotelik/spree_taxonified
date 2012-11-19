@@ -4,7 +4,7 @@ module Spree
 
     MENU_LOCATIONS = [:top, :left, :right, :bottom, :sidebar, :footer]
     
-    has_many :products_taxons, :order => :position
+    has_many :products_taxons
     has_many :products, :through => :products_taxons
 
     accepts_nested_attributes_for :products_taxons, :allow_destroy => true

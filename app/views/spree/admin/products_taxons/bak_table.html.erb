@@ -1,0 +1,66 @@
+<table id="<%= dom_id(taxon, :product_list)%>" class="index">
+
+  <thead>
+    <tr>
+      <th width="256px"><b><%= taxon.name %></b>: <%= t("products") %></th>
+
+      <th width="32px"  class="actions">
+        Priority
+        <%= image_tag "spinner.gif", :style => "display:none", :id => "#{dom_id(taxon, :spin_priority)}" %>
+        <%#= link_to_remote image_tag("/images/admin/icons/reorder.gif") + ' ' + ' reorder priority',
+          {:url => reorder_products_admin_taxon_url(taxon),
+          :method => :put,
+          :with => "Form.serialize(jQuery('##{dom_id(taxon, :edit)}').form)",
+          :before => "jQuery('##{dom_id(taxon, :spin_priority)}').show()",
+          :complete => "jQuery('##{dom_id(taxon, :spin_priority)}').hide()"},
+          :class => 'iconlink' %>
+      </th>
+      <th  width="64px" class="actions"><%= t("action") %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% form_for taxon, :remote => true, :url => admin_taxon_reorder_products_url(taxon), :method => :put do |f| %>
+      <!-- Convoluted but best way to get the pt.id into the params -->
+      <% taxon.products_taxons.each do |pt| -%>
+
+        <% f.fields_for "products_taxons[]", pt do |ff| -%>
+          <tr id="<%= dom_id(pt, :reorder)%>">
+            <td><%= pt.product.name %></td>
+            <td  width="64px"><%= ff.text_field :position, :maxlength=>'3' %></td>
+
+            <td class="actions">
+              <%= image_tag "spinner.gif", :style => "display:none", :id => "#{dom_id(pt, :spin_remove)}" %>
+              <%#= link_to_remote icon('delete') + ' ' + t('remove'),
+                {:url => remove_admin_products_taxon_url(pt),
+                :method => :delete,
+                :loading => "jQuery('##{dom_id(pt, :spin_remove)}').show();",
+                :complete => "jQuery('##{dom_id(pt, :reorder)}').remove();jQuery('##{dom_id(pt, :spin_remove)}').hide();"},
+                :class => 'iconlink' %>
+            </td>
+
+          </tr>
+        <% end %>
+      <% end %>
+
+      <tr>
+        <td>
+          <%= select_tag dom_id(taxon, :add_product), options_for_select(@available_products.collect{ |p| [p.name, p.id] }.insert(0, ''), 0)%>
+
+          <%= image_tag "spinner.gif", :style => "display:none", :id => "#{dom_id(taxon, :add)}" -%>
+          &nbsp;
+          <%#= link_to_remote icon('add') + ' ' + t("add"),
+            {:url => select_admin_products_taxon_url(taxon),
+            :method => :put,
+            :with => "'dom=#{dom_id(taxon, :product_list)}' + '&product=' + jQuery('##{dom_id(taxon, :add_product)}').val()",
+            :before => "jQuery('##{dom_id(taxon, :add)}').show()",
+            :complete => "jQuery('##{dom_id(taxon, :add)}').hide()",
+            }, :class => 'iconlink' %>
+        </td>
+        <td>
+          <%= submit_tag("Save Priority Changes") -%>
+        </td><td class="actions"> </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

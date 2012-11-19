@@ -7,15 +7,26 @@ Spree::Core::Engine.routes.draw do
     # use put as essentially the select is to modify an existing entry with different product
      
     resources :products_taxons do
-      put :select
       delete :remove
+    end
+    
+    resources :taxons do
+      resources :products_taxons do
+        collection do
+          post :update_positions
+        end
+      end
+    end
+
+    
+    resources :products_taxons do
+      collection do
+        post :select
+      end
     end
   
     resources :taxons do
       put :reorder_products
-    end
- 
-    resources :products do   
     end
     
   end

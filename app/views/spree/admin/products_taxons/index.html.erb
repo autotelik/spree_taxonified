@@ -1,0 +1,54 @@
+<% content_for :head do %>
+
+  <style type="text/css">
+    hr {
+      margin: 0.8em 0 0.4em 0; color: #f00;
+      background-color: #00b29e;
+      height: 4px;
+      border: 1px solid red;
+    }
+
+    h3.products_taxons {
+      padding: 1.2em 0 0.4em 0; color: #00b29e;
+    }
+
+  </style>
+<% end %>
+
+
+<%= render :partial => 'spree/admin/shared/product_sub_menu' %>
+
+<h1 class="products_taxons"><%= t(:products_taxons) %></h1>
+
+<% @taxons.each do |taxon| %>
+  <h2>Taxon: <%= taxon.name %></h2>
+  <table class="taxon_page_index">
+    <thead>
+      <tr>
+        <th><%= t('icon') %></th>
+        <th><%= t("description") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr id="<%= dom_id(taxon, :sel)%>">
+        <td width="30%"><%= taxon.icon %></td>
+        <td><%= taxon.description %> </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <h4><%= t(:products) %></h4>
+
+          <table class="index sortable" id="listing_products_taxons<%= taxon.id -%>" data-hook data-sortable-link="<%= update_positions_admin_taxon_products_taxons_url(taxon) %>">
+            <% taxon.products_taxons.each do |pt| %>
+              <tr class="spree_products_taxons <%= cycle('odd', 'even')%>" id="<%= spree_dom_id pt %>" data-hook="option_row">
+                <td><span class="handle"></span> <%= pt.product.name %></td>
+              </tr>
+            <% end %>
+          </table>
+  <%#= render :partial => 'table', :locals => {:taxon => taxon} %>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+<% end %>
+
