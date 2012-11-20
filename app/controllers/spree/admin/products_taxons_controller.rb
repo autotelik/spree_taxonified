@@ -8,8 +8,7 @@ module Spree
       def index
         @taxons = Spree::Taxon.find(:all, :order => 'name')
     
-        # These Products will be available to be added to Taxons
-        
+        # These Products will be available to be added to Taxons  
         @all_available_products = Spree::Product.active
       end
 
@@ -40,37 +39,43 @@ module Spree
               break
             end
           end
-        end
-        
-        message = taxon ? "Ok" : "Sorry could not find the supplied Taxon" 
+        end    
                 
         respond_to do |format|
           format.html { redirect_to admin_product_variants_url(params[:taxon_id]) }
-          format.js  { render :text => message }
+          format.js  { 
+            message = taxon ? "Ok" : "Sorry could not find the supplied Taxon"
+            render :text => message
+          }
         end
       end
       
       # AJAX method for selecting a Product and associating with a Taxon
+      
+      # select_admin_taxon_products_taxons_url(taxon)
+      
       def select
+        
+        logger.info params.inspect 
+        taxon = Spree::Taxon.find(params[:taxon_id])
 
-    
-        @product = Spree::Product.find(params[:product])
-        @taxon   = Spree::Taxon.find(params[:id])
+       # @product = Spree::Product.find(params[:product])
+      #  @taxon   = Spree::Taxon.find(params[:id])
 
-        if(@product && @taxon)
-          @product_taxon = Spree::ProductsTaxon.create(:taxon => @taxon, :product => @product)
-          @taxon.reload
-        end
+       # if(@product && @taxon)
+       #   @product_taxon = Spree::ProductsTaxon.create(:taxon => @taxon, :product => @product)
+       #   @taxon.reload
+       # end
 
-        set_available
+        #set_available
 
 
-        @update_table_dom = params[:dom]
+       # @update_table_dom = params[:dom]
 
-        respond_to do |format|
+      ##  respond_to do |format|
           format.html
-          format.js  { render :partial => 'select', :layout => false}
-        end
+       #   format.js  { render :partial => 'select', :layout => false}
+        #end
 
       end
 

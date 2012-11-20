@@ -8,8 +8,44 @@
       border: 1px solid red;
     }
 
-    h3.products_taxons {
-      padding: 1.2em 0 0.4em 0; color: #00b29e;
+    strong.products_taxons {
+      padding: 0 0 0 12px; 
+      color: #00b29e; font-size: 14px; font-weight: bold;
+    }
+
+    #products_taxons_taxon_details { padding: 24px 0 0 0; }
+
+    div.products_taxons {
+      padding: 12px; 
+      border: 1px solid black;
+      float: left; width: 96%;
+      margin-bottom: 24px;
+    }
+
+    #products_taxons_product_mngmnt
+    {
+      border: 1px solid #00b29e;
+      float: left; width: 96%;
+    }
+
+    #products_taxons_products
+    {
+      border: 1px solid #00b29e; width: 30%; float: left;
+    }
+
+    table.products_taxons_listing_products { }
+
+    #products_taxons_available
+    {
+      padding-top: 12px; float: right;
+    }
+
+    #products_taxons_available ul {
+      list-style-type: none;
+    }
+    
+    #products_taxons_available a, #products_taxons_available select{
+      float: right;
     }
 
   </style>
@@ -21,34 +57,50 @@
 <h1 class="products_taxons"><%= t(:products_taxons) %></h1>
 
 <% @taxons.each do |taxon| %>
-  <h2>Taxon: <%= taxon.name %></h2>
-  <table class="taxon_page_index">
-    <thead>
-      <tr>
-        <th><%= t('icon') %></th>
-        <th><%= t("description") %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr id="<%= dom_id(taxon, :sel)%>">
-        <td width="30%"><%= taxon.icon %></td>
-        <td><%= taxon.description %> </td>
-      </tr>
-      <tr>
-        <td colspan="2">
-          <h4><%= t(:products) %></h4>
+  <div class="products_taxons">
+    <b>Taxon:</b><strong class="products_taxons"><%= taxon.name %></strong>
+    <table id="products_taxons_taxon_details">
+      <thead>
+        <tr>
+          <th><%= t('icon') %></th>
+          <th><%= t("description") %></th>
+          <th><%= t("menu") %></th>
+          <th><%= t("menu index") %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="<%= dom_id(taxon, :sel)%>">
+          <td width="40%"><%= taxon.icon %></td>
+          <td><%= taxon.description %> </td>
+          <td><%= taxon.menu %> </td>
+          <td><%= taxon.menu_index %> </td>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-          <table class="index sortable" id="listing_products_taxons<%= taxon.id -%>" data-hook data-sortable-link="<%= update_positions_admin_taxon_products_taxons_url(taxon) %>">
+    <div id="products_taxons_product_mngmnt">
+
+      <div id="products_taxons_products">
+        <table class="sortable products_taxons_listing_products" id="listing_products<%= taxon.id -%>" data-hook="roducts_taxons_table" data-sortable-link="<%= update_positions_admin_taxon_products_taxons_url(taxon) %>">
+          <thead>
+            <tr><th colspan="2"><h4>Product Listing</h4></th></tr>
+          </thead>
+          <tbody>
             <% taxon.products_taxons.each do |pt| %>
-              <tr class="spree_products_taxons <%= cycle('odd', 'even')%>" id="<%= spree_dom_id pt %>" data-hook="option_row">
+              <tr class="spree_products_taxons <%= cycle('odd', 'even')%>" id="<%= spree_dom_id pt %>" data-hook="products_taxons_row">
                 <td><span class="handle"></span> <%= pt.product.name %></td>
+                <td width="10%"><%= link_to_delete(pt) %></td>
               </tr>
             <% end %>
-          </table>
-  <%#= render :partial => 'table', :locals => {:taxon => taxon} %>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+          </tbody>
+        </table>
+      </div>
+      <div id="products_taxons_available">
+        <%= render :partial => 'table', :locals => {:taxon => taxon} %>
+      </div>
+    </div>
+  </div>
+  <br class="clear">
 <% end %>
 

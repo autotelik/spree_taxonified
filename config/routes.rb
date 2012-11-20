@@ -14,16 +14,11 @@ Spree::Core::Engine.routes.draw do
       resources :products_taxons do
         collection do
           post :update_positions
+          post :select
         end
       end
     end
 
-    
-    resources :products_taxons do
-      collection do
-        post :select
-      end
-    end
   
     resources :taxons do
       put :reorder_products
